@@ -1,0 +1,26 @@
+type Mutation {
+    addPerson(full_name: String!): Person
+    addCredit(person_id: ID!, credit_size: Int!, percent: Float!, start_date: Date!, months_count: Int): Credit
+}
+
+type Query {
+    getPersonById(id: ID!): Person
+}
+
+type Person {
+    id: ID
+    fullName: String
+    creditSet: [Credit]
+}
+
+type Credit {
+    id: ID
+    name: String
+    creditSize: Int
+    percent: Float
+    startDate: Date
+    monthsCount: Int
+    borrower: Person
+}
+
+scalar Date

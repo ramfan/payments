@@ -1,7 +1,21 @@
-spring.datasource.url=jdbc:postgresql://localhost:5432/customers
-spring.datasource.username=root
-spring.datasource.password=123
+#spring.datasource.url=jdbc:postgresql://localhost:5432/customers
+#spring.datasource.username=root
+#spring.datasource.password=123
+#
+#spring.datasource.driver-class-name=org.postgresql.Driver
+#spring.jpa.database=postgresql
+#spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL10Dialect
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/payments
+    username: pguser
+    password: pgpass
 
-spring.datasource.driver-class-name=org.postgresql.Driver
-spring.jpa.database=postgresql
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL10Dialect
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  graphql:
+    graphiql:
+      enabled: true
