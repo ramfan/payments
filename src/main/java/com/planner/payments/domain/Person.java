@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "person")
+@Table(name = "persons")
 @EqualsAndHashCode
 public class Person {
     @Id

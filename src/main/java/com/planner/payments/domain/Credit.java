@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-@Table(name = "credit")
+@Table(name = "credits")
 @EqualsAndHashCode
 public class Credit {
     @Id
@@ -41,6 +41,8 @@ public class Credit {
     @Getter
     @Setter
     private Integer monthsCount;
+
+
 
     @ManyToOne
     @JoinColumn(name = "borrower_id")
