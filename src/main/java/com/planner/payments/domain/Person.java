@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "persons")
 @EqualsAndHashCode
 public class Person {
     @Id
@@ -23,13 +22,9 @@ public class Person {
     @Getter
     private String fullName;
 
-    @OneToMany( cascade = CascadeType.ALL)
-    @JoinTable(
-            joinColumns = @JoinColumn(name = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "credit_id")
-    )
+    @OneToMany( cascade = CascadeType.ALL, mappedBy = "borrower")
     @Getter
-    private Set<Credit> creditSet = new HashSet<>();
+    private final Set<Credit> creditSet = new HashSet<>();
 
     public Person(String fullName) {
         this.fullName = fullName;

@@ -6,10 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "credits")
 @EqualsAndHashCode
 public class Credit {
     @Id
@@ -42,13 +43,28 @@ public class Credit {
     @Setter
     private Integer monthsCount;
 
-
+    @Column(name = "loan_balance")
+    @Getter
+    @Setter
+    private Long loanBalance;
 
     @ManyToOne
-    @JoinColumn(name = "borrower_id")
     @Getter
     @Setter
     private Person borrower;
+
+    @OneToMany(mappedBy = "loan")
+    @Getter
+    private Set<LoanPayment> loanPayments = new HashSet<>();
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @Getter
+    @Setter
+    private CreditType creditType;
+
+    public void addLoanPayment(LoanPayment payment){
+        this.loanPayments.add(payment);
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+import java.util.Objects;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
 public class PersonDTO {
     private Long id;
     @JsonProperty("full_name")

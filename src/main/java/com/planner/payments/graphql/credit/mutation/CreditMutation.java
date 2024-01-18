@@ -1,7 +1,9 @@
 package com.planner.payments.graphql.credit.mutation;
 
 import com.planner.payments.DTO.CreditDTO;
+import com.planner.payments.DTO.CreditTypeDTO;
 import com.planner.payments.DTO.PersonDTO;
+import com.planner.payments.constants.LoanType;
 import com.planner.payments.exception.NotFoundException;
 import com.planner.payments.service.CreditService.CreditService;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -26,13 +28,15 @@ public class CreditMutation {
             @Argument(name = "credit_size") Long  creditSize,
             @Argument(name = "percent") Float  percent,
             @Argument(name = "start_date") LocalDate startDate,
-            @Argument(name = "months_count") Long monthsCount
+            @Argument(name = "months_count") Long monthsCount,
+            @Argument(name = "credit_type") LoanType creditType
             ) throws NotFoundException {
         var creditDto = new CreditDTO();
         creditDto.setCreditSize(creditSize);
         creditDto.setMonthsCount(monthsCount);
         creditDto.setStartDate(startDate);
         creditDto.setPercent(percent);
+        creditDto.setCreditType(new CreditTypeDTO(creditType));
 
         return creditService.addCreditByUser(id, creditDto);
 

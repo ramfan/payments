@@ -10,12 +10,13 @@ spring:
     url: jdbc:postgresql://localhost:5432/payments
     username: pguser
     password: pgpass
-
-
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
   graphql:
     graphiql:
       enabled: true
+  sql:
+    init:
+      mode: always
