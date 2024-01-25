@@ -1,0 +1,18 @@
+mutation addPerson($fullName: String!) {
+    addPerson(full_name: $fullName){
+        id
+        fullName
+        creditSet {
+            id
+            borrower {
+                id
+                fullName
+            }
+            creditSize
+            monthsCount
+            startDate
+            percent
+            name
+        }
+    }
+}

@@ -7,4 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface CreditService {
     @Transactional
     CreditDTO addCreditByUser(Long borrowerId, CreditDTO creditDTO) throws NotFoundException;
+    @Transactional
+    Long removeCreditById(Long id);
+    CreditDTO getCreditById(Long id) throws NotFoundException;;
 }

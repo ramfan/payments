@@ -9,21 +9,19 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Getter
 @Entity
-@EqualsAndHashCode
+//@EqualsAndHashCode
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Long id;
 
     @Column(name = "full_name" )
     @Setter
-    @Getter
     private String fullName;
 
-    @OneToMany( cascade = CascadeType.ALL, mappedBy = "borrower")
-    @Getter
+    @OneToMany( cascade = CascadeType.ALL, mappedBy = "borrower", orphanRemoval = true, fetch = FetchType.LAZY)
     private final Set<Credit> creditSet = new HashSet<>();
 
     public Person(String fullName) {

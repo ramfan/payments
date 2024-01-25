@@ -1,6 +1,7 @@
 package com.planner.payments.service.CreditService;
 
 import com.planner.payments.DTO.CreditDTO;
+import com.planner.payments.constants.LoanType;
 import com.planner.payments.exception.NotFoundException;
 import com.planner.payments.mapper.CreditCycleReferencesResolver;
 import com.planner.payments.mapper.CreditMapper;
@@ -32,14 +33,26 @@ public class CreditServiceImpl implements CreditService {
     @Transactional
     public CreditDTO addCreditByUser(Long borrowerId, CreditDTO creditDTO) throws NotFoundException {
         var borrower = personService.getPersonById(borrowerId);
-        var loanType = creditTypeRepository.getByType(creditDTO.getCreditType().getType()).orElseThrow(NotFoundException::new);
+        var loanType = creditTypeRepository.getByType(creditDTO.getCreditType()).orElseThrow(NotFoundException::new);
         var credit = creditMapper.toCredit(creditDTO, creditCycleReferencesResolver);
         credit.setCreditType(loanType);
         credit.setLoanBalance(credit.getCreditSize());
         credit.setBorrower(borrower);
         credit = creditRepository.save(credit);
         borrower.addCredit(credit);
-        personService.save(borrower);
+        return creditMapper.toCreditDto(credit, creditCycleReferencesResolver);
+    }
+
+    @Override
+    @Transactional
+    public Long removeCreditById(Long id) {
+        creditRepository.deleteById(id);
+        return id;
+    }
+
+    @Override
+    public CreditDTO getCreditById(Long id) throws NotFoundException {
+        var credit = creditRepository.findById(id).orElseThrow(NotFoundException::new);
         return creditMapper.toCreditDto(credit, creditCycleReferencesResolver);
     }
 }

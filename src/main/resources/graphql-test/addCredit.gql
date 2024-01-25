@@ -1,0 +1,25 @@
+mutation addCredit($person_id: ID!, $credit_size: Int!, $percent: Float!, $start_date: Date!, $months_count: Int, $credit_type: CreditType!){
+    addCredit(
+        percent: $percent,
+        credit_size: $credit_size,
+        credit_type: $credit_type,
+        months_count: $months_count,
+        person_id: $person_id,
+        start_date: $start_date
+    ){
+        id
+        creditSize
+        startDate
+        percent
+        name
+        monthsCount
+        creditType
+        borrower {
+            id
+            fullName
+            creditSet {
+                id
+            }
+        }
+    }
+}

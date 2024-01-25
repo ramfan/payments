@@ -1,6 +1,7 @@
 type Mutation {
     addPerson(full_name: String!): Person
     addCredit(person_id: ID!, credit_size: Int!, percent: Float!, start_date: Date!, months_count: Int, credit_type: CreditType!): Credit
+    removeCredit(id: ID!): ID
 }
 
 type Query {
@@ -21,6 +22,7 @@ type Credit {
     startDate: Date
     monthsCount: Int
     borrower: Person
+    creditType: CreditType
 }
 
 enum CreditType {

@@ -18,7 +18,11 @@ public class DateScalar implements Coercing {
     @Nullable
     @Override
     public LocalDate serialize(@NotNull Object dataFetcherResult, @NotNull GraphQLContext graphQLContext, @NotNull Locale locale) throws CoercingSerializeException {
-        return LocalDate.parse((CharSequence) dataFetcherResult);
+        if(dataFetcherResult instanceof LocalDate){
+            return (LocalDate)dataFetcherResult;
+        }
+
+        return LocalDate.parse((String) dataFetcherResult);
     }
 
     @Nullable

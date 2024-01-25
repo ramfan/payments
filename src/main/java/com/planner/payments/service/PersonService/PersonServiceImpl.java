@@ -7,6 +7,7 @@ import com.planner.payments.mapper.CreditCycleReferencesResolver;
 import com.planner.payments.mapper.PersonCycleReferencesResolver;
 import com.planner.payments.mapper.PersonMapper;
 import com.planner.payments.repository.PersonRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,6 +25,7 @@ public class PersonServiceImpl implements PersonService{
     }
 
     @Override
+    @Transactional
     public PersonDTO addPerson(PersonDTO personDTO) {
         Person newPerson = personMapper.toPerson(personDTO, personCycleReferencesResolver);
 
@@ -46,7 +48,14 @@ public class PersonServiceImpl implements PersonService{
     }
 
     @Override
+    @Transactional
     public Person save(Person person) {
         return personRepository.save(person);
+    }
+
+    @Override
+    @Transactional
+    public void flush() {
+        personRepository.flush();
     }
 }

@@ -1,0 +1,12 @@
+query getPersonById ($id: ID!) {
+    getPersonById(id: $id){
+        id
+        fullName
+        creditSet {
+            id
+            borrower {
+                id
+            }
+        }
+    }
+}

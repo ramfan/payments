@@ -6,23 +6,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @EqualsAndHashCode
 @NoArgsConstructor
 public class LoanPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Long id;
 
     @Column
     private Long value;
 
     @ManyToOne
-    @Getter
     private Credit loan;
 
     @ManyToOne
-    @Getter
     private LoanPaymentType paymentType;
 
     public LoanPayment(Long value, Credit loan, LoanPaymentType paymentType) {

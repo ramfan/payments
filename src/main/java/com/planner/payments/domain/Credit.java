@@ -10,55 +10,46 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Getter
 @Entity
-@EqualsAndHashCode
+//@EqualsAndHashCode
 public class Credit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Long id;
 
     @Column
-    @Getter
     @Setter
     private String name;
 
     @Column(name = "credit_size", nullable = false)
-    @Getter
     @Setter
     private Long creditSize;
 
     @Column
-    @Getter
     @Setter
     private Float percent;
 
     @Column(name = "start_date", updatable = false)
-    @Getter
     @Setter
     private LocalDate startDate;
 
     @Column(name = "months_count")
-    @Getter
     @Setter
     private Integer monthsCount;
 
     @Column(name = "loan_balance")
-    @Getter
     @Setter
     private Long loanBalance;
 
-    @ManyToOne
-    @Getter
+    @ManyToOne(fetch = FetchType.LAZY,  cascade = CascadeType.MERGE)
     @Setter
     private Person borrower;
 
-    @OneToMany(mappedBy = "loan")
-    @Getter
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<LoanPayment> loanPayments = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @Getter
     @Setter
     private CreditType creditType;
 

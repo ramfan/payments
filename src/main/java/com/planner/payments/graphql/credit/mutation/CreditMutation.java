@@ -24,22 +24,27 @@ public class CreditMutation {
 
     @MutationMapping
     public CreditDTO addCredit(
-            @Argument(name = "person_id") Long  id,
-            @Argument(name = "credit_size") Long  creditSize,
-            @Argument(name = "percent") Float  percent,
+            @Argument(name = "person_id") Long id,
+            @Argument(name = "credit_size") Long creditSize,
+            @Argument(name = "percent") Float percent,
             @Argument(name = "start_date") LocalDate startDate,
             @Argument(name = "months_count") Long monthsCount,
             @Argument(name = "credit_type") LoanType creditType
-            ) throws NotFoundException {
+    ) throws NotFoundException {
         var creditDto = new CreditDTO();
         creditDto.setCreditSize(creditSize);
         creditDto.setMonthsCount(monthsCount);
         creditDto.setStartDate(startDate);
         creditDto.setPercent(percent);
-        creditDto.setCreditType(new CreditTypeDTO(creditType));
+        creditDto.setCreditType(creditType);
 
         return creditService.addCreditByUser(id, creditDto);
 
+    }
+
+    @MutationMapping
+    public Long removeCredit(@Argument(name = "id") Long id) {
+        return creditService.removeCreditById(id);
     }
 
 

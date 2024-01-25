@@ -37,11 +37,23 @@ dependencies {
 	testImplementation 'org.springframework:spring-webflux'
 	testImplementation 'org.springframework.graphql:spring-graphql-test'
 //	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation "org.testcontainers:testcontainers:1.19.3"
+	implementation platform('org.testcontainers:testcontainers-bom:1.19.3') //import bom
+	testImplementation('org.testcontainers:postgresql')
+	testImplementation "org.testcontainers:junit-jupiter:1.19.3"
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
+
+	maxHeapSize = '1G'
+
+	testLogging {
+		events "passed"
+	}}
 
 generateJava {
 	schemaPaths = ["${projectDir}/src/main/resources/graphql-client"]

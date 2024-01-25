@@ -6,17 +6,16 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @EqualsAndHashCode
 @NoArgsConstructor
 public class LoanPaymentType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Long id;
 
     @Column
-    @Getter
     private PaymentType type;
 
     public LoanPaymentType(PaymentType type) {

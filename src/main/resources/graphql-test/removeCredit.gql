@@ -1,0 +1,3 @@
+mutation removeCredit($id: ID!) {
+    removeCredit(id: $id)
+}

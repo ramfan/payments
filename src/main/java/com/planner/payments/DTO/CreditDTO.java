@@ -1,5 +1,6 @@
 package com.planner.payments.DTO;
 
+import com.planner.payments.constants.LoanType;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -13,5 +14,5 @@ public class CreditDTO {
     private LocalDate startDate;
     private Long monthsCount;
     private PersonDTO borrower;
-    private CreditTypeDTO creditType;
+    private LoanType creditType;
 }

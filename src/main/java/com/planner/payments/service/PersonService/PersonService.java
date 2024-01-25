@@ -9,6 +9,6 @@ public interface PersonService {
     PersonDTO addPerson(PersonDTO personDTO);
     PersonDTO getPersonDtoById(Long id) throws NotFoundException;
     Person getPersonById(Long id) throws NotFoundException;
-
+    void flush();
     Person save(Person person);
 }
