@@ -1,5 +1,5 @@
 type Mutation {
-    addPerson(full_name: String!): Person
+    addPerson(username: String, password: String, full_name: String!): Person
     addCredit(person_id: ID!, credit_size: Int!, percent: Float!, start_date: Date!, months_count: Int, credit_type: CreditType!): Credit
     removeCredit(id: ID!): ID
 }
@@ -11,8 +11,17 @@ type Query {
 type Person {
     id: ID
     fullName: String
+    username: String
+    roles: [Role]
     creditSet: [Credit]
 }
+
+type Role {
+    id: ID!
+    name: String!
+    allowedOperations: [Operations]
+}
+
 
 type Credit {
     id: ID
@@ -28,6 +37,12 @@ type Credit {
 enum CreditType {
     CONSUMER_LOAN,
     MORTGAGE
+}
+
+enum Operations {
+    WRITE,
+    READ,
+    USER_MANAGING
 }
 
 scalar Date

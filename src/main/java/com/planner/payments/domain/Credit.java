@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class Credit {
     private Person borrower;
 
     @OneToMany(mappedBy = "loan", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Set<LoanPayment> loanPayments = new HashSet<>();
+    private Collection<LoanPayment> loanPayments = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @Setter

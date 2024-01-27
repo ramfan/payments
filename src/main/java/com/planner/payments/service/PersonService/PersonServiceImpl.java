@@ -1,36 +1,58 @@
 package com.planner.payments.service.PersonService;
 
 import com.planner.payments.DTO.PersonDTO;
+import com.planner.payments.constants.Role;
 import com.planner.payments.domain.Person;
 import com.planner.payments.exception.NotFoundException;
-import com.planner.payments.mapper.CreditCycleReferencesResolver;
-import com.planner.payments.mapper.PersonCycleReferencesResolver;
-import com.planner.payments.mapper.PersonMapper;
+import com.planner.payments.mapper.CycleReferencesResolver;
+import com.planner.payments.mapper.person.PersonCycleReferencesResolver;
+import com.planner.payments.mapper.person.PersonMapper;
 import com.planner.payments.repository.PersonRepository;
+import com.planner.payments.service.RoleService.RoleService;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Collections;
+
 @Service
-public class PersonServiceImpl implements PersonService{
+public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
     private final PersonMapper personMapper;
-    private final  PersonCycleReferencesResolver personCycleReferencesResolver;
+    private final CycleReferencesResolver personCycleReferencesResolver;
+
+    private final RoleService roleService;
 
 
-    public PersonServiceImpl(PersonRepository personRepository, PersonMapper personMapper, PersonCycleReferencesResolver personCycleReferencesResolver) {
+    public PersonServiceImpl(PersonRepository personRepository, PersonMapper personMapper, CycleReferencesResolver personCycleReferencesResolver, RoleService roleService) {
         this.personRepository = personRepository;
         this.personMapper = personMapper;
         this.personCycleReferencesResolver = personCycleReferencesResolver;
+        this.roleService = roleService;
     }
 
     @Override
     @Transactional
-    public PersonDTO addPerson(PersonDTO personDTO) {
-        Person newPerson = personMapper.toPerson(personDTO, personCycleReferencesResolver);
+    public PersonDTO addPerson(PersonDTO personDTO) throws NotFoundException {
+        var newPerson = personMapper.toPerson(personDTO, personCycleReferencesResolver);
+        var isEmptyPersonList = personRepository.findAll().isEmpty();
 
-        if(newPerson != null){
-            var createdPerson =  save(newPerson);
+        if (newPerson != null) {
+            newPerson.setEnabled(true);
+
+            if(isEmptyPersonList){
+                var adminRole = roleService.getRoleByName(Role.ADMIN);
+                newPerson.addRole(adminRole);
+            } else {
+                var userRole = roleService.getRoleByName(Role.USER);
+                newPerson.addRole(userRole);
+            }
+
+            var createdPerson = save(newPerson);
             return personMapper.toPersonDto(createdPerson, personCycleReferencesResolver);
         }
 
@@ -44,7 +66,7 @@ public class PersonServiceImpl implements PersonService{
 
     @Override
     public PersonDTO getPersonDtoById(Long id) throws NotFoundException {
-        return personMapper.toPersonDto(getPersonById(id),personCycleReferencesResolver);
+        return personMapper.toPersonDto(getPersonById(id), personCycleReferencesResolver);
     }
 
     @Override
@@ -57,5 +79,56 @@ public class PersonServiceImpl implements PersonService{
     @Transactional
     public void flush() {
         personRepository.flush();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var person = personRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+        return new PersonDetails(person);
+    }
+
+    public static class PersonDetails implements UserDetails {
+
+        private final Person person;
+
+        public PersonDetails(Person person) {
+            this.person = person;
+        }
+
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return person.getRoles();
+        }
+
+        @Override
+        public String getPassword() {
+            return this.person.getPassword();
+        }
+
+        @Override
+        public String getUsername() {
+            return this.person.getUsername();
+        }
+
+        @Override
+        public boolean isAccountNonExpired() {
+            return true;
+        }
+
+        @Override
+        public boolean isAccountNonLocked() {
+            return true;
+        }
+
+        @Override
+        public boolean isCredentialsNonExpired() {
+            return true;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return this.person.getEnabled();
+        }
     }
 }

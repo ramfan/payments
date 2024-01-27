@@ -1,10 +1,10 @@
 package com.planner.payments.service.CreditService;
 
 import com.planner.payments.DTO.CreditDTO;
-import com.planner.payments.constants.LoanType;
 import com.planner.payments.exception.NotFoundException;
-import com.planner.payments.mapper.CreditCycleReferencesResolver;
-import com.planner.payments.mapper.CreditMapper;
+import com.planner.payments.mapper.CycleReferencesResolver;
+import com.planner.payments.mapper.credit.CreditCycleReferencesResolver;
+import com.planner.payments.mapper.credit.CreditMapper;
 import com.planner.payments.repository.CreditRepository;
 import com.planner.payments.repository.CreditTypeRepository;
 import com.planner.payments.service.PersonService.PersonService;
@@ -19,9 +19,9 @@ public class CreditServiceImpl implements CreditService {
     private final PersonService personService;
     private final CreditMapper creditMapper;
 
-    private final CreditCycleReferencesResolver creditCycleReferencesResolver;
+    private final CycleReferencesResolver creditCycleReferencesResolver;
 
-    public CreditServiceImpl(CreditRepository creditRepository, CreditTypeRepository creditTypeRepository, PersonService personService, CreditMapper creditMapper, CreditCycleReferencesResolver creditCycleReferencesResolver) {
+    public CreditServiceImpl(CreditRepository creditRepository, CreditTypeRepository creditTypeRepository, PersonService personService, CreditMapper creditMapper, CycleReferencesResolver creditCycleReferencesResolver) {
         this.creditRepository = creditRepository;
         this.creditTypeRepository = creditTypeRepository;
         this.personService = personService;

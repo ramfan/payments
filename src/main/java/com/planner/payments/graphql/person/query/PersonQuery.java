@@ -9,6 +9,7 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import java.util.Collection;
 import java.util.Set;
 
 @Controller
@@ -26,7 +27,7 @@ public class PersonQuery {
     }
 
     @SchemaMapping
-    public Set<CreditDTO> creditSet(PersonDTO personDTO) {
+    public Collection<CreditDTO> creditSet(PersonDTO personDTO) {
         return personDTO.getCreditSet();
     }
 }

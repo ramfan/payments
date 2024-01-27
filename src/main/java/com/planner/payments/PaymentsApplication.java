@@ -2,6 +2,7 @@ package com.planner.payments;
 
 import com.planner.payments.graphql.scalars.DateScalar;
 import graphql.schema.GraphQLScalarType;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -11,5 +12,6 @@ public class PaymentsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PaymentsApplication.class, args);
 	}
+
 
 }

@@ -1,7 +1,13 @@
-mutation addPerson($fullName: String!) {
-    addPerson(full_name: $fullName){
+mutation addPerson($username: String!, $password: String!, $fullName: String!) {
+    addPerson(full_name: $fullName, username: $username, password: $password){
         id
         fullName
+        username
+        roles {
+            id
+            name
+            allowedOperations
+        }
         creditSet {
             id
             borrower {

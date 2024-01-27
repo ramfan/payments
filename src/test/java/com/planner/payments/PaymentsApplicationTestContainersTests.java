@@ -2,12 +2,17 @@ package com.planner.payments;
 
 import com.planner.payments.DTO.CreditDTO;
 import com.planner.payments.DTO.PersonDTO;
+import com.planner.payments.DTO.RoleDTO;
 import com.planner.payments.constants.LoanType;
+import com.planner.payments.constants.Operation;
+import com.planner.payments.constants.Role;
 import com.planner.payments.domain.Credit;
 import com.planner.payments.domain.Person;
 import com.planner.payments.exception.NotFoundException;
 import com.planner.payments.repository.CreditRepository;
 import com.planner.payments.repository.PersonRepository;
+import com.planner.payments.repository.RoleRepository;
+import com.planner.payments.service.PersonService.PersonService;
 import jakarta.annotation.PreDestroy;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +31,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -40,6 +47,12 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
 
     @Autowired
     CreditRepository creditRepository;
+
+    @Autowired
+    PersonService personService;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     static HttpGraphQlTester graphQlTester;
 
@@ -78,9 +91,14 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
     }
 
     @BeforeEach
-    void initUser(){
-        var person = new Person(TEST_USER_NAME);
-        personRepository.save(person);
+    void initUser() throws NotFoundException {
+        if(personRepository.findAll().isEmpty()){
+            var personDto = new PersonDTO(TEST_USER_NAME);
+            personDto.setUsername("username");
+            personDto.setPassword("password");
+            personService.addPerson(personDto);
+        }
+
     }
 
     void removeAllCredits(){
@@ -91,11 +109,33 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
     void addingPersonTest() {
         var result = graphQlTester.documentName("addPerson")
                 .variable("fullName", "Test username")
+                .variable("username", "username1")
+                .variable("password", "ps")
                 .execute().path("addPerson").entity(PersonDTO.class).get();
 
         assertInstanceOf(PersonDTO.class, result);
         assertEquals("Test username", result.getFullName());
+        assertTrue( result.getRoles().stream().anyMatch((RoleDTO r) -> r.getName().equals(Role.USER.toString())));
         assertTrue(result.getCreditSet().isEmpty());
+
+    }
+
+    @Test
+    void userRoleOperationsTest() throws NotFoundException {
+        var role = roleRepository.getRoleByName(Role.USER.toString()).orElseThrow(NotFoundException::new);
+        var operations = role.getAllowedOperations().stream().map(o -> Operation.valueOf(o.getAuthority())).collect(Collectors.toSet());
+        assertNotNull(role);
+        assertFalse(operations.isEmpty());
+
+    }
+
+    @Test
+    void adminRoleOperationsTest() throws NotFoundException {
+        var role = roleRepository.getRoleByName(Role.ADMIN.toString()).orElseThrow(NotFoundException::new);
+        var operations = role.getAllowedOperations().stream().map(o -> Operation.valueOf(o.getAuthority())).collect(Collectors.toSet());
+        assertNotNull(role);
+        assertFalse(operations.isEmpty());
+
     }
 
     @Test

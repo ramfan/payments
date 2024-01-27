@@ -8,7 +8,5 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface PersonRepository extends JpaRepository<Person, Long> {
-//    @NotNull
-//    @Query("from Person join fetch Credit" )
-//    Optional<Person> findById(@NotNull Long id);
+    Optional<Person> findByUsername(String username);
 }
