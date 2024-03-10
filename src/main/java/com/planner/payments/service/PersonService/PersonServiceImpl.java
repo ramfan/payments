@@ -96,6 +96,10 @@ public class PersonServiceImpl implements PersonService {
             this.person = person;
         }
 
+        public Long getId(){
+            return this.person.getId();
+        }
+
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
             return person.getRoles();
