@@ -7,6 +7,8 @@ import com.planner.payments.service.PersonService.PersonService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 import java.util.Collection;
@@ -22,6 +24,7 @@ public class PersonQuery {
     }
 
     @QueryMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public PersonDTO getPersonById (@Argument Long id) throws NotFoundException {
         return personService.getPersonDtoById(id);
     }

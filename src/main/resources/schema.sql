@@ -15,7 +15,7 @@ create table if not exists person
     id        bigserial primary key,
     full_name varchar not null,
     username  varchar not null unique,
-    password  varchar not null unique,
+    password  varchar not null,
     enabled   bool    not null default false
 );
 

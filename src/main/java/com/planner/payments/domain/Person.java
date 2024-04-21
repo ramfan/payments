@@ -33,7 +33,8 @@ public class Person {
     @Column(nullable = false, unique = true)
     private Boolean enabled;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    //todo: решить проблему с сессией в фильтре
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),

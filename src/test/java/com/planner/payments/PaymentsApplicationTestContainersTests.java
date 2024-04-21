@@ -7,7 +7,6 @@ import com.planner.payments.constants.LoanType;
 import com.planner.payments.constants.Operation;
 import com.planner.payments.constants.Role;
 import com.planner.payments.domain.Credit;
-import com.planner.payments.domain.Person;
 import com.planner.payments.exception.NotFoundException;
 import com.planner.payments.repository.CreditRepository;
 import com.planner.payments.repository.PersonRepository;
