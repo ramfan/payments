@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface JwtService {
     String generateToken(PersonServiceImpl.PersonDetails details);
     boolean isJWTExpired(DecodedJWT decodedJWT);
-//    DecodedJWT decodeToken(String token);
     JwtClaimsRecord getClaims(String token);
     boolean isTokenValid(String token, UserDetails userDetails);
 }

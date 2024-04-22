@@ -36,14 +36,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        // Получаем токен из заголовка
         var authHeader = request.getHeader(HEADER_NAME);
         if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Обрезаем префикс и получаем имя пользователя из токена
         var jwt = authHeader.substring(BEARER_PREFIX.length());
         var username = jwtService.getClaims(jwt).username();
 
@@ -51,7 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = personService
                     .loadUserByUsername(username);
 
-            // Если токен валиден, то аутентифицируем пользователя
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
 
