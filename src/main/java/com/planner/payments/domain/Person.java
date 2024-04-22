@@ -34,7 +34,7 @@ public class Person {
     private Boolean enabled;
 
     //todo: решить проблему с сессией в фильтре
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),
