@@ -24,7 +24,7 @@ public class PersonQuery {
     }
 
     @QueryMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public PersonDTO getPersonById (@Argument Long id) throws NotFoundException {
         return personService.getPersonDtoById(id);
     }
