@@ -3,6 +3,7 @@ package com.planner.payments;
 import com.planner.payments.DTO.CreditDTO;
 import com.planner.payments.DTO.PersonDTO;
 import com.planner.payments.DTO.RoleDTO;
+import com.planner.payments.service.jwt.JwtService;
 import org.springframework.security.test.context.support.WithMockUser;
 import com.planner.payments.constants.LoanType;
 import com.planner.payments.constants.Operation;
@@ -53,6 +54,9 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    JwtService jwtService;
 
     static HttpGraphQlTester graphQlTester;
 

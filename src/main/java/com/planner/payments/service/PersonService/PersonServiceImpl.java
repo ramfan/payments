@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -132,6 +133,10 @@ public class PersonServiceImpl implements PersonService {
         @Override
         public boolean isEnabled() {
             return this.person.getEnabled();
+        }
+
+        public Person getPerson() {
+            return person;
         }
     }
 }

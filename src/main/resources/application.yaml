@@ -14,4 +14,4 @@ spring:
       enabled: true
   sql:
     init:
-      mode: always
+      mode: embedded

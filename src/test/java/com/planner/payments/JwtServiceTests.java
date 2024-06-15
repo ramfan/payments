@@ -58,7 +58,7 @@ public class JwtServiceTests {
     void initUser() throws NotFoundException {
         if(personRepository.findAll().isEmpty()){
             var personDto = new PersonDTO(TEST_USER_NAME);
-            personDto.setUsername("username");
+            personDto.setUsername(TEST_USER_NAME);
             personDto.setPassword("password");
             personService.addPerson(personDto);
         }
@@ -68,14 +68,14 @@ public class JwtServiceTests {
     @Test
     void generateJwtToken() throws NotFoundException {
         var person = personService.getPersonById(EXPECTED_PERSON_ID);
-        var token = jwtService.generateToken(new PersonServiceImpl.PersonDetails(person));
+        var token = jwtService.generateToken(new PersonServiceImpl.PersonDetails(person), 1000L);
         assertFalse(token.isEmpty(), "Token can not be empty");
     }
 
     @Test
     void extractJwtTokenData() throws NotFoundException {
         var person = personService.getPersonById(EXPECTED_PERSON_ID);
-        var token = jwtService.generateToken(new PersonServiceImpl.PersonDetails(person));
+        var token = jwtService.generateToken(new PersonServiceImpl.PersonDetails(person), 1000L);
         var jwtClaimsRecord = jwtService.getClaims(token);
         assertEquals(EXPECTED_PERSON_ID, jwtClaimsRecord.id());
         assertEquals(1, jwtClaimsRecord.roleList().length);
