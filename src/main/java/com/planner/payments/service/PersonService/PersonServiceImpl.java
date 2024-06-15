@@ -5,18 +5,17 @@ import com.planner.payments.constants.Role;
 import com.planner.payments.domain.Person;
 import com.planner.payments.exception.NotFoundException;
 import com.planner.payments.mapper.CycleReferencesResolver;
-import com.planner.payments.mapper.person.PersonCycleReferencesResolver;
 import com.planner.payments.mapper.person.PersonMapper;
 import com.planner.payments.repository.PersonRepository;
 import com.planner.payments.service.RoleService.RoleService;
-import jakarta.transaction.Transactional;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -82,8 +81,9 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var person = personRepository.findByUsername(username)
+        var person = personRepository.findPersonAndRolesByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
         return new PersonDetails(person);
     }
@@ -94,6 +94,10 @@ public class PersonServiceImpl implements PersonService {
 
         public PersonDetails(Person person) {
             this.person = person;
+        }
+
+        public Long getId(){
+            return this.person.getId();
         }
 
         @Override
@@ -129,6 +133,10 @@ public class PersonServiceImpl implements PersonService {
         @Override
         public boolean isEnabled() {
             return this.person.getEnabled();
+        }
+
+        public Person getPerson() {
+            return person;
         }
     }
 }

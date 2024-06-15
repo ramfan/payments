@@ -9,6 +9,7 @@ import com.planner.payments.service.CreditService.CreditService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class CreditMutation {
     }
 
     @MutationMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public CreditDTO addCredit(
             @Argument(name = "person_id") Long id,
             @Argument(name = "credit_size") Long creditSize,
@@ -43,6 +45,7 @@ public class CreditMutation {
     }
 
     @MutationMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Long removeCredit(@Argument(name = "id") Long id) {
         return creditService.removeCreditById(id);
     }

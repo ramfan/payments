@@ -3,11 +3,12 @@ package com.planner.payments;
 import com.planner.payments.DTO.CreditDTO;
 import com.planner.payments.DTO.PersonDTO;
 import com.planner.payments.DTO.RoleDTO;
+import com.planner.payments.service.jwt.JwtService;
+import org.springframework.security.test.context.support.WithMockUser;
 import com.planner.payments.constants.LoanType;
 import com.planner.payments.constants.Operation;
 import com.planner.payments.constants.Role;
 import com.planner.payments.domain.Credit;
-import com.planner.payments.domain.Person;
 import com.planner.payments.exception.NotFoundException;
 import com.planner.payments.repository.CreditRepository;
 import com.planner.payments.repository.PersonRepository;
@@ -53,6 +54,9 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    JwtService jwtService;
 
     static HttpGraphQlTester graphQlTester;
 
@@ -106,12 +110,13 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
     }
 
     @Test
+    @WithMockUser(authorities={"ADMIN"})
     void addingPersonTest() {
-        var result = graphQlTester.documentName("addPerson")
+        var result = graphQlTester.documentName("registration")
                 .variable("fullName", "Test username")
                 .variable("username", "username1")
                 .variable("password", "ps")
-                .execute().path("addPerson").entity(PersonDTO.class).get();
+                .execute().path("registration").entity(PersonDTO.class).get();
 
         assertInstanceOf(PersonDTO.class, result);
         assertEquals("Test username", result.getFullName());
@@ -139,6 +144,7 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
     }
 
     @Test
+    @WithMockUser(authorities={"ADMIN"})
     void getPersonByIdTest() throws NotFoundException {
         var testPerson = personRepository.findById(EXPECTED_PERSON_ID).orElseThrow(NotFoundException::new);
 
@@ -152,6 +158,7 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
     }
 
     @Test
+    @WithMockUser(authorities={"ADMIN"})
     void addFirstCredit(){
 
         var addCreditRequestResult = graphQlTester.documentName("addCredit")
@@ -173,6 +180,7 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
     }
 
     @Test
+    @WithMockUser(authorities={"ADMIN"})
     void addSecondCredit() throws NotFoundException {
         removeAllCredits();
         graphQlTester.documentName("addCredit")
@@ -200,6 +208,7 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
     }
 
     @Test
+    @WithMockUser(authorities={"USER"})
     void removeCredit() throws NotFoundException {
         removeAllCredits();
         var removeCandidate = graphQlTester.documentName("addCredit")

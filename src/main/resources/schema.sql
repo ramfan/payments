@@ -15,7 +15,7 @@ create table if not exists person
     id        bigserial primary key,
     full_name varchar not null,
     username  varchar not null unique,
-    password  varchar not null unique,
+    password  varchar not null,
     enabled   bool    not null default false
 );
 
@@ -33,20 +33,20 @@ create table if not exists operation
 
 create table if not exists person_role
 (
-    id bigserial primary key,
+    id        bigserial primary key,
     person_id bigserial,
-    role_id bigserial,
-    foreign key (person_id) references person(id),
-    foreign key (role_id) references role(id)
+    role_id   bigserial,
+    foreign key (person_id) references person (id),
+    foreign key (role_id) references role (id)
 );
 
 create table if not exists role_operation
 (
-    id bigserial primary key,
+    id           bigserial primary key,
     operation_id bigserial,
-    role_id bigserial,
-    foreign key (operation_id) references operation(id),
-    foreign key (role_id) references role(id)
+    role_id      bigserial,
+    foreign key (operation_id) references operation (id),
+    foreign key (role_id) references role (id)
 );
 
 create table if not exists credit
@@ -76,3 +76,14 @@ create table if not exists loan_payment
     foreign key (payment_type_id) references loan_payment_type (id)
 );
 
+CREATE TABLE person_session
+(
+    "id"           bigserial PRIMARY KEY,
+    "person_id"     bigserial REFERENCES person (id) ON DELETE CASCADE,
+    "refresh_token" uuid                     NOT NULL,
+    "ua"           character varying(200), /* user-agent */
+    "fingerprint"  character varying(200),
+    "ip"           character varying(15),
+    "expires_in"    bigint                   NOT NULL,
+    "created_at"    timestamp with time zone NOT NULL DEFAULT now()
+);

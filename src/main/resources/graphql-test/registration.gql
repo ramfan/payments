@@ -1,5 +1,5 @@
-mutation addPerson($username: String!, $password: String!, $fullName: String!) {
-    addPerson(full_name: $fullName, username: $username, password: $password){
+mutation registration($username: String!, $password: String!, $fullName: String!) {
+    registration(full_name: $fullName, username: $username, password: $password){
         id
         fullName
         username
