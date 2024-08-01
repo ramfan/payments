@@ -23,11 +23,14 @@ public class RefreshTokenGraphQLInterceptor implements WebGraphQlInterceptor {
                 .build());
 
         return chain.next(request).doOnNext(response -> {
-            if(request.getDocument().startsWith("mutation login") || request.getDocument().startsWith("mutation refreshSession")){
+            if(request.getDocument().contains("login") || request.getDocument().contains("refreshSession")){
                 String value = response.getExecutionInput().getGraphQLContext().get("refresh_token");
                 Long expiry =  response.getExecutionInput().getGraphQLContext().get("refresh_token_expiry");
-                ResponseCookie cookie = ResponseCookie.from("refresh_token", value).httpOnly(true).maxAge(expiry).secure(true).build();
-                response.getResponseHeaders().add(HttpHeaders.SET_COOKIE, cookie.toString());
+                if(value != null && expiry != null){
+                    ResponseCookie cookie = ResponseCookie.from("refresh_token", value).httpOnly(true).maxAge(expiry).secure(true).build();
+                    response.getResponseHeaders().add(HttpHeaders.SET_COOKIE, cookie.toString());
+                }
+
             }
 
         });

@@ -10,12 +10,13 @@ import com.planner.payments.service.jwt.JwtService;
 import graphql.GraphQLContext;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.http.HttpCookie;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 
-import java.net.HttpCookie;
 import java.util.Map;
 import java.util.UUID;
 
@@ -71,9 +72,11 @@ public class PersonMutation {
     }
 
     @MutationMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public String refreshSession(GraphQLContext context) throws NotFoundException {
         Map<String, HttpCookie> cookie = context.get("cookie");
-        var refreshToken = cookie.get("refresh_token").getValue();
+        var refreshTokenCookie = cookie.get("refresh_token");
+        var refreshToken = refreshTokenCookie.getValue();
         var session = personSessionService.refreshSession(UUID.fromString(refreshToken));
         var user = (PersonServiceImpl.PersonDetails) personService.loadUserByUsername(session.getPerson().getUsername());
         context.put("refresh_token", session.getRefreshToken().toString());
