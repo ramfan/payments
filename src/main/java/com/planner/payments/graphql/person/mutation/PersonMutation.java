@@ -72,7 +72,7 @@ public class PersonMutation {
     }
 
     @MutationMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @PreAuthorize("isAuthenticated()")
     public String refreshSession(GraphQLContext context) throws NotFoundException {
         Map<String, HttpCookie> cookie = context.get("cookie");
         var refreshTokenCookie = cookie.get("refresh_token");
