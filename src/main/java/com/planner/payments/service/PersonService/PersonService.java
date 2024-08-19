@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public interface PersonService extends UserDetailsService {
     PersonDTO addPerson(PersonDTO personDTO) throws NotFoundException;
     PersonDTO getPersonDtoById(Long id) throws NotFoundException;
+    PersonDTO getSelfInfo() throws NotFoundException;
     Person getPersonById(Long id) throws NotFoundException;
     void flush();
     Person save(Person person);

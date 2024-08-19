@@ -1,5 +1,5 @@
-query getPersonById ($id: ID!) {
-    getPersonById(id: $id){
+query getSelfData {
+    getSelfData {
         id
         fullName
         creditSet {

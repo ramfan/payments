@@ -7,7 +7,8 @@ type Mutation {
 }
 
 type Query {
-    getPersonById(id: ID!): Person
+    getSelfData: Person
+    getCredit(id: ID!): Credit
 }
 
 type Person {

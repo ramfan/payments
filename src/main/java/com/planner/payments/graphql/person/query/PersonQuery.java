@@ -22,9 +22,9 @@ public class PersonQuery {
     }
 
     @QueryMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public PersonDTO getPersonById (@Argument Long id) throws NotFoundException {
-        return personService.getPersonDtoById(id);
+    @PreAuthorize("isAuthenticated()")
+    public PersonDTO getSelfData () throws NotFoundException {
+        return personService.getSelfInfo();
     }
 
     @SchemaMapping

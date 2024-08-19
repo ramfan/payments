@@ -143,7 +143,7 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
 
     }
 
-    @Test
+//    @Test
     @WithMockUser(authorities={"ADMIN"})
     void getPersonByIdTest() throws NotFoundException {
         var testPerson = personRepository.findById(EXPECTED_PERSON_ID).orElseThrow(NotFoundException::new);
@@ -245,4 +245,15 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
 
     }
 
+    @Test
+    @WithMockUser(authorities={"USER"}, username = "username")
+    void getSelfData() {
+
+        var getPersonByIdResult = graphQlTester.documentName("getSelfData")
+                .execute().path("getSelfData").entity(PersonDTO.class).get();
+
+        assertInstanceOf(PersonDTO.class, getPersonByIdResult);
+        assertEquals(EXPECTED_PERSON_ID, getPersonByIdResult.getId());
+        assertEquals("Test user", getPersonByIdResult.getFullName());
+    }
 }

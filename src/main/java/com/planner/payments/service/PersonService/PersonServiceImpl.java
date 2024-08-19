@@ -9,6 +9,7 @@ import com.planner.payments.mapper.person.PersonMapper;
 import com.planner.payments.repository.PersonRepository;
 import com.planner.payments.service.RoleService.RoleService;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -86,6 +87,13 @@ public class PersonServiceImpl implements PersonService {
         var person = personRepository.findPersonAndRolesByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
         return new PersonDetails(person);
+    }
+
+    @Override
+    public PersonDTO getSelfInfo() throws NotFoundException {
+        var userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        var user = personRepository.findByUsername(userName).orElseThrow(NotFoundException::new);
+        return personMapper.toPersonDto(user, personCycleReferencesResolver);
     }
 
     public static class PersonDetails implements UserDetails {
