@@ -158,7 +158,7 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
     }
 
     @Test
-    @WithMockUser(authorities={"ADMIN"})
+    @WithMockUser(authorities={"ADMIN"}, username = "username")
     void addFirstCredit(){
 
         var addCreditRequestResult = graphQlTester.documentName("addCredit")
@@ -166,7 +166,6 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
                 .variable("credit_size", 4600000)
                 .variable("credit_type", LoanType.MORTGAGE.toString())
                 .variable("months_count", 242)
-                .variable("person_id", EXPECTED_PERSON_ID)
                 .variable("start_date", "2023-11-09")
                 .execute().path("addCredit").entity(CreditDTO.class).get();
 
@@ -180,7 +179,7 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
     }
 
     @Test
-    @WithMockUser(authorities={"ADMIN"})
+    @WithMockUser(authorities={"ADMIN"}, username = "username")
     void addSecondCredit() throws NotFoundException {
         removeAllCredits();
         graphQlTester.documentName("addCredit")
@@ -188,7 +187,6 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
                 .variable("credit_size", 4600000)
                 .variable("credit_type", LoanType.MORTGAGE.toString())
                 .variable("months_count", 242)
-                .variable("person_id", EXPECTED_PERSON_ID)
                 .variable("start_date", "2023-11-09")
                 .execute().path("addCredit").entity(CreditDTO.class).get();
 
@@ -197,7 +195,6 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
                 .variable("credit_size", 374000)
                 .variable("credit_type", LoanType.CONSUMER_LOAN.toString())
                 .variable("months_count", 242)
-                .variable("person_id", EXPECTED_PERSON_ID)
                 .variable("start_date", "2023-11-09")
                 .execute().path("addCredit").entity(CreditDTO.class).get();
 
@@ -208,7 +205,7 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
     }
 
     @Test
-    @WithMockUser(authorities={"USER"})
+    @WithMockUser(authorities={"USER"}, username = "username")
     void removeCredit() throws NotFoundException {
         removeAllCredits();
         var removeCandidate = graphQlTester.documentName("addCredit")
@@ -216,7 +213,6 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
                 .variable("credit_size", 4600000)
                 .variable("credit_type", LoanType.MORTGAGE.toString())
                 .variable("months_count", 242)
-                .variable("person_id", EXPECTED_PERSON_ID)
                 .variable("start_date", "2023-11-09")
                 .execute().path("addCredit").entity(CreditDTO.class).get();
 
@@ -225,7 +221,6 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
                 .variable("credit_size", 374000)
                 .variable("credit_type", LoanType.CONSUMER_LOAN.toString())
                 .variable("months_count", 242)
-                .variable("person_id", EXPECTED_PERSON_ID)
                 .variable("start_date", "2023-11-09")
                 .execute().path("addCredit").entity(CreditDTO.class).get();
 
@@ -256,4 +251,28 @@ public class PaymentsApplicationTestContainersTests extends ApplicationContextPr
         assertEquals(EXPECTED_PERSON_ID, getPersonByIdResult.getId());
         assertEquals("Test user", getPersonByIdResult.getFullName());
     }
+
+    @Test
+    @WithMockUser(authorities={"USER"}, username = "username")
+    void addCreditWithName(){
+
+        var addCreditRequestResult = graphQlTester.documentName("addCreditWithName")
+                .variable("percent", 14.9)
+                .variable("credit_size", 4600000)
+                .variable("credit_type", LoanType.MORTGAGE.toString())
+                .variable("months_count", 242)
+                .variable("start_date", "2023-11-09")
+                .variable("name", "Mortgage")
+                .execute().path("addCredit").entity(CreditDTO.class).get();
+
+        var person = addCreditRequestResult.getBorrower();
+        assertInstanceOf(CreditDTO.class, addCreditRequestResult);
+        assertEquals(242, addCreditRequestResult.getMonthsCount());
+        assertEquals(LoanType.MORTGAGE, addCreditRequestResult.getCreditType());
+        assertInstanceOf(PersonDTO.class, person);
+        assertEquals(TEST_USER_NAME, person.getFullName());
+        assertEquals("Mortgage", addCreditRequestResult.getName());
+        assertEquals(4600000, addCreditRequestResult.getCreditSize());
+    }
 }
+

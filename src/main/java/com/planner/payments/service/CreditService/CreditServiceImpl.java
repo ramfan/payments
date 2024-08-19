@@ -8,6 +8,7 @@ import com.planner.payments.mapper.credit.CreditMapper;
 import com.planner.payments.repository.CreditRepository;
 import com.planner.payments.repository.CreditTypeRepository;
 import com.planner.payments.service.PersonService.PersonService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +32,8 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     @Transactional
-    public CreditDTO addCreditByUser(Long borrowerId, CreditDTO creditDTO) throws NotFoundException {
+    public CreditDTO addCreditByUser(CreditDTO creditDTO) throws NotFoundException {
+        var borrowerId = personService.getSelfInfo().getId();
         var borrower = personService.getPersonById(borrowerId);
         var loanType = creditTypeRepository.getByType(creditDTO.getCreditType()).orElseThrow(NotFoundException::new);
         var credit = creditMapper.toCredit(creditDTO, creditCycleReferencesResolver);

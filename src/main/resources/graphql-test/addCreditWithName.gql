@@ -1,10 +1,11 @@
-mutation addCredit($credit_size: Int!, $percent: Float!, $start_date: Date!, $months_count: Int, $credit_type: CreditType!){
+mutation addCredit($credit_size: Int!, $percent: Float!, $start_date: Date!, $months_count: Int, $credit_type: CreditType!, $name: String){
     addCredit(
         percent: $percent,
         credit_size: $credit_size,
         credit_type: $credit_type,
         months_count: $months_count,
         start_date: $start_date
+        name: $name
     ){
         id
         creditSize

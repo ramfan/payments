@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", uses = {CreditTypeMapper.class, RoleMapper.class})
 public abstract class PersonMapper {
 
-   @Mapping(target = "creditSet", ignore = true, qualifiedByName = "mapWithoutData")
+   @Mapping(target = "creditSet", qualifiedByName = "mapWithoutData")
     public abstract PersonDTO toPersonDto(Person person, @Context CycleReferencesResolver cycleContext);
 
     @Mapping(target = "creditSet", ignore = true)
