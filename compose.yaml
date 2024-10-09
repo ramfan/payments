@@ -1,9 +1,26 @@
+version: "3"
+networks:
+  payments-app:
+
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+  server:
+    build: .
     ports:
-      - '5432'
+      - "8080:8080"
+    networks:
+      - payments-app
+    depends_on:
+      - database
+
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: payments
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+    volumes:
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./src/main/resources/data.sql:/docker-entrypoint-initdb.d/02_data.sql
+    networks:
+      - payments-app
+

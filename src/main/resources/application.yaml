@@ -1,17 +1,3 @@
-jwt:
-  secret-key: F1CF26FCC2AC75CD6624E3D19DB77
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/payments
-    username: pguser
-    password: pgpass
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-  graphql:
-    graphiql:
-      enabled: true
-  sql:
-    init:
-      mode: embedded
+#spring:
+#  profiles:
+#    active: 'dev'
